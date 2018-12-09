@@ -1,0 +1,204 @@
+﻿<Window x:Class="UavProject.MainWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ctl="clr-namespace:ControlUtils.Controls;assembly=ControlUtils_v3"
+             xmlns:local="clr-namespace:UavProject"           
+             mc:Ignorable="d"       
+             Closing="Window_Closing"
+             d:DesignHeight="590.655" DataContext="{x:Static local:UavViewModel.UavModel}" Width="1190.654">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBlock}" >
+            <Setter Property="VerticalAlignment" Value="Center"/>
+
+        </Style>
+        <Style  TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Background" Value="Gray"/>
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style TargetType="{x:Type ListBox}" >
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource RadioBtnListItemStyle}" />
+            <Setter Property="ItemsPanel" Value="{DynamicResource ItemsPanelTemplate}" />
+            <!--<Setter Property="HorizontalAlignment" Value="Center" />-->
+            <Setter Property="Margin" Value="10,7" />
+        </Style>
+
+    </Window.Resources>
+
+    <ctl:EasyGrid Columns="*, 5,*, *">
+
+        <ctl:EasyGrid Rows="Auto, *">
+            <!--Uplink-->
+            <ctl:EasyGrid Rows="Auto,Auto, Auto" Margin="10">
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Uplink" VerticalAlignment="Center" />
+                    <ToggleButton Content="Stop Display" Margin="10,5"/>
+                    <ComboBox SelectionChanged="UpComboBox_SelectionChanged" SelectedIndex="0"  HorizontalAlignment="Left" Width="130" VerticalContentAlignment="Center" Margin="10,5">
+                        <ComboBoxItem Content="All" Tag="255"/>
+                        <Separator/>
+                        <ComboBoxItem Content="초기화 메세지" Tag="0"/>
+                        <ComboBoxItem Content="점항법 메세지" Tag="1"/>
+                        <ComboBoxItem Content="경로 메세지" Tag="2"/>
+                        <ComboBoxItem Content="귀환 메세지" Tag="3"/>
+                        <ComboBoxItem Content="자동착륙 메세지" Tag="4"/>
+                        <ComboBoxItem Content="자동이륙 메세지" Tag="5"/>
+                        <ComboBoxItem Content="사용자 메세지" Tag="6"/>
+                        <ComboBoxItem Content="카메라 메세지" Tag="7"/>
+                    </ComboBox>
+                    <TextBlock Text="{Binding UplinkCount}" Margin="20,0,0,0" FontSize="20"  />
+
+                </StackPanel>
+                <UniformGrid Grid.Row="1" Columns="10" Rows="1" Margin="0,3,0,0" >
+                    <Label Content="0"  Background="#FFBFBFBF"/>
+                    <Label Content="1" Background="#FFBFBFBF"/>
+                    <Label Content="2" Background="#FFBFBFBF"/>
+                    <Label Content="3" Background="#FFBFBFBF"/>
+                    <Label Content="4" Background="#FFBFBFBF"/>
+                    <Label Content="5" Background="#FFBFBFBF"/>
+                    <Label Content="6" Background="#FFBFBFBF"/>
+                    <Label Content="7" Background="#FFBFBFBF"/>
+                    <Label Content="8" Background="#FFBFBFBF"/>
+                    <Label Content="9" Background="#FFBFBFBF"/>
+                </UniformGrid>
+                <UniformGrid Grid.Row="2" Columns="10" Rows="6" Name="up_grid" Margin="0,3,0,0"/>
+            </ctl:EasyGrid>
+
+            <ListView Grid.Row="1" ItemsSource="{Binding Path=UplinkItems}">
+                <ListView.View >
+                    <GridView >
+                        <GridViewColumn Header="항목" Width="150"  DisplayMemberBinding="{Binding Path=Field}"/>
+                        <GridViewColumn Header="Offset" Width="80" DisplayMemberBinding="{Binding Path=FieldOffset}" />
+                        <GridViewColumn Header="Value" Width="150" DisplayMemberBinding="{Binding Path=Value}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </ctl:EasyGrid>
+        <StackPanel Grid.Column="2">
+
+            <!--Downlink-->
+            <ctl:EasyGrid Rows="Auto,Auto, Auto" Margin="10">
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock Text="Downlink" VerticalAlignment="Center" />
+                    <ToggleButton Content="Stop Display" Margin="10,5"/>
+                    <ToggleButton Content="Uplink Send" Margin="10,5"  IsChecked="{Binding Path=AutoCheck, Source={x:Static local:UavViewModel.UavModel}}" />
+                    <TextBlock Text="{Binding DownlinkCount}" Margin="20,0,0,0" FontSize="20"  />
+                </StackPanel>
+                <UniformGrid Grid.Row="1" Columns="10" Rows="1" Margin="0,3,0,0" >
+                    <Label Content="0"  Background="#FFBFBFBF"/>
+                    <Label Content="1" Background="#FFBFBFBF"/>
+                    <Label Content="2" Background="#FFBFBFBF"/>
+                    <Label Content="3" Background="#FFBFBFBF"/>
+                    <Label Content="4" Background="#FFBFBFBF"/>
+                    <Label Content="5" Background="#FFBFBFBF"/>
+                    <Label Content="6" Background="#FFBFBFBF"/>
+                    <Label Content="7" Background="#FFBFBFBF"/>
+                    <Label Content="8" Background="#FFBFBFBF"/>
+                    <Label Content="9" Background="#FFBFBFBF"/>
+                </UniformGrid>
+                <UniformGrid Grid.Row="2" Columns="10" Rows="11" Name="down_grid" Margin="0,3,0,0"/>
+           
+            </ctl:EasyGrid>
+
+            <ctl:EasyGrid Columns="*,*" Rows="Auto, *">
+                <ListBox   SelectedIndex="{Binding Path=Downlink.PrimarySecondaryMode}" Grid.ColumnSpan="2">
+                    <ListBoxItem Content="All" />
+                    <ListBoxItem Content="Only Primary" />
+                    <ListBoxItem Content="Only Secondary" />
+                </ListBox>
+                <StackPanel Grid.Row="1">
+
+                    <ctl:EasyGrid Columns="Auto, *, Auto" Margin="0,8">
+                        <TextBlock Text="Roll(b4)"  />
+                        <Slider Grid.Column="1"  Margin="3,10"  Minimum="-6000"  Maximum="6000" Value="{Binding Path=Downlink.Roll}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Path=Downlink.Roll}" />
+                    </ctl:EasyGrid>
+                    <ctl:EasyGrid Columns="Auto, *, Auto" Margin="0,8">
+                        <TextBlock Text="Pitch(b6)"  />
+                        <Slider Grid.Column="1"  Margin="3,10"  Minimum="-6000"  Maximum="6000" Value="{Binding Path=Downlink.Pitch}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Path=Downlink.Pitch}" />
+                    </ctl:EasyGrid>
+                    <ctl:EasyGrid Columns="Auto, *, Auto" Margin="0,8">
+                        <TextBlock Text="Heading(b8)"  />
+                        <Slider Grid.Column="1"  Margin="3,10"  Minimum="0"  Maximum="36000" Value="{Binding Path=Downlink.Heading}"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Path=Downlink.Heading}"/>
+                    </ctl:EasyGrid>
+                    <ctl:EasyGrid Columns="Auto, *" Margin="0,8">
+                        <TextBlock Text="GPSLon(b18)"  />
+                        <TextBlock Grid.Column="1"  Margin="10,0" Text="{Binding Path=Downlink.AvLongitude}"/>
+                    </ctl:EasyGrid>
+                    <ctl:EasyGrid Columns="Auto, *" Margin="0,8">
+                        <TextBlock Text="GPSLat(b18)"  />
+                        <TextBlock Grid.Column="1"  Margin="10,0" Text="{Binding Path=Downlink.AvLatitude}"/>
+                    </ctl:EasyGrid>
+
+                </StackPanel>
+                <StackPanel Grid.Row="1" Grid.Column="1" >
+                    
+                </StackPanel>
+            </ctl:EasyGrid>
+        </StackPanel>
+
+
+        <StackPanel Grid.Column="3">
+            <ctl:EasyGrid Columns="180, *">
+                <TextBlock  Text="FlightMode (b2 : D1-D4)" />
+                <ComboBox Grid.Column="1"  SelectedIndex="{Binding Path=Downlink.FlightMode}" Width="150" HorizontalAlignment="Left" Margin="10,7">
+                    <ComboBoxItem Content="CommandLoss" />
+                    <ComboBoxItem Content="Manual" />
+                    <ComboBoxItem Content="StickAuto" />
+                    <ComboBoxItem Content="GPSAid" />
+                    <ComboBoxItem Content="KnobAuto" />
+                    <ComboBoxItem Content="PointNav" />
+                    <ComboBoxItem Content="Preprogram" />
+                    <ComboBoxItem Content="AutoRecovery" />
+                    <ComboBoxItem Content="AutoTakeoff" />
+                    <ComboBoxItem Content="AutoLand" />
+                    <ComboBoxItem Content="CameraGuide" />
+                </ComboBox>
+            </ctl:EasyGrid>
+            <ctl:EasyGrid Columns="180, *">
+                <TextBlock  Text="EmergencyMode (b2 : D1-D4)" />
+                <ListBox Grid.Column="1"  SelectedIndex="{Binding Path=Downlink.EmergencyMode}" >
+                    <ListBoxItem Content="Ground" />
+                    <ListBoxItem Content="Air" />
+                </ListBox>
+            </ctl:EasyGrid>
+            <ctl:EasyGrid Columns="180, *">
+                <TextBlock  Text="RollHeadingMode (b3 : D5)" />
+                <ListBox Grid.Column="1"   SelectedIndex="{Binding Path=Downlink.RollHeadingMode}" >
+                    <ListBoxItem Content="고도율" />
+                    <ListBoxItem Content="고도" />
+                </ListBox>
+            </ctl:EasyGrid>
+            <ctl:EasyGrid Columns="180, *">
+                <TextBlock  Text="MagClibration (b3 : D2-D3)" />
+                <ListBox Grid.Column="1"   SelectedIndex="{Binding Path=Downlink.MagCalibration}" >
+                    <ListBoxItem Content="None" />
+                    <ListBoxItem Content="진행 중" />
+                    <ListBoxItem Content="종료" />
+                </ListBox>
+            </ctl:EasyGrid>
+            <ctl:EasyGrid Columns="180, *">
+                <TextBlock  Text="Current FCC (b3 : D1)" />
+                <ListBox Grid.Column="1"   SelectedIndex="{Binding Path=Downlink.CurrentFcc}" >
+                    <ListBoxItem Content="Primary" />
+                    <ListBoxItem Content="Secondary" />
+                </ListBox>
+            </ctl:EasyGrid>
+            <ctl:EasyGrid Columns="180, *, 30">
+                <TextBlock  Text="발전기 전압 (b82)" />
+                <Slider Grid.Column="1"  Margin="10" Maximum="160" Value="{Binding Path=Downlink.GeneratorVoltage}"/>
+                <TextBlock Grid.Column="2" Text="{Binding Path=Downlink.GeneratorVoltage}" />
+            </ctl:EasyGrid>
+
+        </StackPanel>
+
+
+    </ctl:EasyGrid>
+</Window>

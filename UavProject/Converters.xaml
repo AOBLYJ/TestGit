@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:cnv="clr-namespace:ControlUtils.Converter;assembly=ControlUtils_v3"
+        
+      >
+
+ 
+    <cnv:BoolToStringConverter x:Key="cnv_bool_str" />
+   
+
+</ResourceDictionary>
