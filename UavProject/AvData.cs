@@ -13,6 +13,9 @@ namespace UavProject
         {
             Field = fieldname;
             FieldOffset = field_offset;
+            //Offset
+
+            //sdfs
         }
 
 
